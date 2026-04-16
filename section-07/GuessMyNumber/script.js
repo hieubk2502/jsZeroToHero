@@ -11,23 +11,87 @@
 // .textContent is content text using for div, p, span
 // .value is input value using for input, text area
 
-const randomNumber = Math.trunc(Math.random() * 20) + 1
+const displayMessage = function (message) {
+    document.querySelector('.message').textContent = message
+}
 
-document.querySelector('.number').textContent = randomNumber
+const displayScore = function (score) {
+    document.querySelector('.score').textContent = score
+}
+
+const displayBackgroundColor = function (color) {
+    document.querySelector('body').style.backgroundColor = color
+}
+
+const displaySelectedNumber = function (number) {
+    document.querySelector('.number').textContent = number
+}
+
+const displayGuess = function (guess) {
+    document.querySelector('.guess').value = guess
+}
+
+let selectedNumber = Math.trunc(Math.random() * 20) + 1
+let score = 6
+let highScore = 0
+displaySelectedNumber(selectedNumber)
+
 
 document.querySelector('.check').addEventListener(
-    'click', function() {
-
-        console.log(`${document.querySelector('.guess').textContent}`)
+    'click', function () {
 
         const guess = Number(document.querySelector('.guess').value)
-        
+
         console.log(`${guess} - ${typeof guess}`)
 
-        if(!guess){
-            document.querySelector('.message').textContent = 'No correct!'
-        }else {
-            document.querySelector('.message').textContent = 'Correct!!!!!'
+        if (score < 1) {
+            document.querySelector('.message').textContent = 'You lost game!'
+            return
         }
+
+        if (!guess) {
+            score--
+            displayScore(score)
+            displayMessage('No correct!')
+            displayBackgroundColor('#070807')
+
+        } else if (guess > selectedNumber) {
+            displayMessage('Too high!!!!!')
+            score--
+            displayScore(score)
+            displayBackgroundColor('#242623')
+
+        } else if (guess < selectedNumber) {
+            displayMessage('Too Low!!!!!')
+            score--
+            displayScore(score)
+            displayBackgroundColor('#050505')
+
+        } else {
+            displayMessage('Correct!!!!!')
+            displayBackgroundColor('#60b347')
+            displaySelectedNumber('50rem')
+
+            if (score > highScore) {
+                highScore = score
+                document.querySelector('.highscore').textContent = highScore
+            }
+        }
+    }
+);
+
+document.querySelector('.again').addEventListener(
+    'click', function () {
+        score = 6
+        highScore = 0
+        console.log('clicked')
+        selectedNumber = Math.trunc(Math.random() * 20) + 1
+
+        displayScore(score)
+        displayMessage('Start guessing...')
+        displaySelectedNumber(selectedNumber)
+        displayGuess(null)
+        displayBackgroundColor('#222')
+        displayHighScore(highScore)
     }
 )
